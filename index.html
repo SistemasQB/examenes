@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Exámenes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Creador de Exámenes</h1>
+
+        <div id="exam-form">
+            <label for="exam-title">Título del examen:</label>
+            <input type="text" id="exam-title" placeholder="Introduce el título del examen">
+
+            <button id="add-question-btn">Agregar Pregunta</button>
+            <button id="generate-exam-btn">Generar Examen</button>
+
+            <div id="questions-container"></div>
+        </div>
+
+        <!-- Aquí se mostrará el examen generado -->
+        <div id="exam-generated" style="display: none;">
+            <h2 id="generated-title"></h2>
+            <div id="generated-questions"></div>
+            <button id="back-to-edit-btn">Volver a editar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

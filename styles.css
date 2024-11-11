@@ -1,0 +1,91 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#exam-form, #exam-generated {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question label {
+    font-weight: bold;
+}
+
+.answer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.answer-options label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.answer-options input[type="checkbox"],
+.answer-options input[type="radio"] {
+    margin-left: 10px;
+}
+
+#exam-generated {
+    display: none;
+}
+
+#generated-questions {
+    margin-top: 20px;
+}
+
+#back-to-edit-btn {
+    background-color: #f44336;
+}
+
+#back-to-edit-btn:hover {
+    background-color: #d32f2f;
+}
