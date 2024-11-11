@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Generado</title>
+    <!-- Cargar Bootstrap desde CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Estilos adicionales */
+        body {
+            background-color: #f7f7f7;
+        }
+        .question {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .question label {
+            font-weight: bold;
+        }
+        .answer-option {
+            margin-left: 20px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+        .logo {
+            max-width: 200px; /* Ajusta el tamaño del logo */
+            margin-right: 15px; /* Espaciado entre logo y nombre */
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 50px; /* Alineación vertical */
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Encabezado con logo y nombre de la empresa -->
+        <div class="header">
+            <img src="firma1-removebg-preview.png" alt="Logo" class="logo">
+           
+        </div>
+
+        <h1 id="exam-title" class="text-center mb-4"></h1>
+        
+        <div id="exam-container"></div>
+
+        <div class="text-center mt-4">
+            <button id="submit-exam-btn" class="btn btn-custom">Enviar Respuestas</button>
+        </div>
+    </div>
+
+    <script>
+        // exam.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const examTitle = localStorage.getItem('examTitle');
+            const questions = JSON.parse(localStorage.getItem('examQuestions'));
+            const examContainer = document.getElementById('exam-container');
+            const examTitleElement = document.getElementById('exam-title');
+            examTitleElement.textContent = examTitle;
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${question.questionText}`;
+                questionDiv.appendChild(questionText);
+
+                question.answers.forEach((answer, idx) => {
+                    const answerDiv = document.createElement('div');
+                    answerDiv.classList.add('answer-option');
+
+                    if (question.answers.length === 1) {
+                        // Respuesta abierta
+                        const openInput = document.createElement('input');
+                        openInput.type = 'text';
+                        openInput.classList.add('form-control');
+                        openInput.placeholder = 'Escribe tu respuesta aquí...';
+                        answerDiv.appendChild(openInput);
+                    } else {
+                        // Opción múltiple o verdadero/falso
+                        const answerInput = document.createElement('input');
+                        answerInput.type = question.answers.length > 2 ? 'checkbox' : 'radio';
+                        answerInput.name = `question-${index}`;
+                        answerInput.id = `answer-${index}-${idx}`;
+                        answerInput.classList.add('form-check-input');
+                        
+                        const label = document.createElement('label');
+                        label.setAttribute('for', answerInput.id);
+                        label.classList.add('form-check-label');
+                        label.textContent = answer.answerText;
+                        answerDiv.appendChild(answerInput);
+                        answerDiv.appendChild(label);
+                    }
+
+                    questionDiv.appendChild(answerDiv);
+                });
+
+                examContainer.appendChild(questionDiv);
+            });
+
+            // Enviar respuestas
+            document.getElementById('submit-exam-btn').addEventListener('click', function() {
+                let score = 0;
+                questions.forEach((question, index) => {
+                    const userAnswers = document.querySelectorAll(`input[name="question-${index}"]:checked`);
+                    userAnswers.forEach((input) => {
+                        const answerText = input.nextElementSibling.textContent;
+                        if (question.answers.find(ans => ans.answerText === answerText && ans.isCorrect)) {
+                            score++;
+                        }
+                    });
+                });
+                alert(`Tu puntaje es: ${score} de ${questions.length}`);
+            });
+        });
+    </script>
+</body>
+</html>

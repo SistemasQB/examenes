@@ -2,7 +2,6 @@
 
 document.getElementById('add-question-btn').addEventListener('click', addQuestion);
 document.getElementById('generate-exam-btn').addEventListener('click', generateExam);
-document.getElementById('back-to-edit-btn').addEventListener('click', backToEdit);
 
 let questionCount = 0;
 
@@ -69,10 +68,11 @@ function renderAnswers(type, answerDiv) {
             answerWrapper.appendChild(answerLabel);
             answerWrapper.appendChild(answerInput);
 
-            // Casilla de verificación (solo para opción múltiple)
+            // Casilla de verificación (para marcar cuál es la correcta)
             const correctAnswerCheckbox = document.createElement('input');
             correctAnswerCheckbox.type = 'checkbox';
             correctAnswerCheckbox.classList.add('correct-answer');
+            correctAnswerCheckbox.setAttribute('data-answer-index', i);
             answerWrapper.appendChild(correctAnswerCheckbox);
 
             answerDiv.appendChild(answerWrapper);
@@ -87,6 +87,14 @@ function renderAnswers(type, answerDiv) {
         trueRadio.name = 'true-false';
         trueWrapper.appendChild(trueLabel);
         trueWrapper.appendChild(trueRadio);
+
+        // Casilla para marcar la respuesta correcta
+        const correctTrueCheckbox = document.createElement('input');
+        correctTrueCheckbox.type = 'checkbox';
+        correctTrueCheckbox.classList.add('correct-answer');
+        correctTrueCheckbox.setAttribute('data-answer', 'true');
+        trueWrapper.appendChild(correctTrueCheckbox);
+
         answerDiv.appendChild(trueWrapper);
 
         const falseWrapper = document.createElement('div');
@@ -97,6 +105,14 @@ function renderAnswers(type, answerDiv) {
         falseRadio.name = 'true-false';
         falseWrapper.appendChild(falseLabel);
         falseWrapper.appendChild(falseRadio);
+
+        // Casilla para marcar la respuesta correcta
+        const correctFalseCheckbox = document.createElement('input');
+        correctFalseCheckbox.type = 'checkbox';
+        correctFalseCheckbox.classList.add('correct-answer');
+        correctFalseCheckbox.setAttribute('data-answer', 'false');
+        falseWrapper.appendChild(correctFalseCheckbox);
+
         answerDiv.appendChild(falseWrapper);
     } else if (type === 'open-ended') {
         // Respuesta abierta
@@ -133,7 +149,7 @@ function generateExam() {
         } else if (questionType === 'true-false') {
             answerInputs.forEach((input, index) => {
                 const answerText = input.value;
-                const isCorrect = radioButtons[index].checked;
+                const isCorrect = checkboxes[index] ? checkboxes[index].checked : false;
                 answers.push({ answerText, isCorrect });
                 if (isCorrect) correctAnswer = answerText;
             });
@@ -144,45 +160,10 @@ function generateExam() {
         questions.push({ questionText, answers, correctAnswer });
     });
 
-    // Mostrar el examen generado
-    document.getElementById('exam-form').style.display = 'none';
-    document.getElementById('exam-generated').style.display = 'block';
+    // Guardar examen en localStorage y redirigir a la página del examen
+    localStorage.setItem('examTitle', title);
+    localStorage.setItem('examQuestions', JSON.stringify(questions));
 
-    // Mostrar título del examen
-    document.getElementById('generated-title').textContent = title;
-
-    // Mostrar preguntas y respuestas
-    const generatedQuestionsDiv = document.getElementById('generated-questions');
-    generatedQuestionsDiv.innerHTML = '';  // Limpiar cualquier contenido previo
-    questions.forEach((question, index) => {
-        const questionElement = document.createElement('div');
-        questionElement.classList.add('question');
-
-        const questionText = document.createElement('p');
-        questionText.textContent = `${index + 1}. ${question.questionText}`;
-        questionElement.appendChild(questionText);
-
-        question.answers.forEach((answer, idx) => {
-            const answerElement = document.createElement('p');
-            answerElement.textContent = answer.answerText;
-            if (answer.isCorrect) {
-                answerElement.style.fontWeight = 'bold';
-                answerElement.style.color = 'green';  // Respuesta correcta en verde
-            }
-            questionElement.appendChild(answerElement);
-        });
-
-        generatedQuestionsDiv.appendChild(questionElement);
-    });
-}
-
-function backToEdit() {
-    // Volver a la pantalla de edición
-    document.getElementById('exam-form').style.display = 'block';
-    document.getElementById('exam-generated').style.display = 'none';
-
-    // Limpiar el examen generado
-    document.getElementById('exam-title').value = '';
-    document.getElementById('generated-title').textContent = '';
-    document.getElementById('generated-questions').innerHTML = '';
+    // Redirigir a la página del examen
+    window.location.href = 'exam.html';
 }
